@@ -1,33 +1,34 @@
-const express = require("express");
-const https = require("https");
-const app = express();
+const inputval = document.querySelector("#cityinput");
+const btn = document.querySelector("#add");
+const city = document.querySelector("#cityoutput");
+const descrip = document.querySelector("#description");
+const temp = document.querySelector("#temp");
+const wind = document.querySelector("#wind");
+apik = "3045dd712ffe6e702e3245525ac7fa38";
+function convertion(val) {
+  return (val - 273).toFixed(2);
+}
 
-app.get("/", function (req, res) {
-  const url =
-    "https://api.openweathermap.org/data/2.5/weather?q=manila&units=metric&appid=6079acfc8beb63451c0570900c5e606c";
-  https.get(url, function (response) {
-    console.log(response);
-  });
-  res.send("Weather App v1.0 server is up and running");
+btn.addEventListener("click", function () {
+  fetch(
+    "https://api.openweathermap.org/data/2.5/weather?q=" +
+      inputval.value +
+      "&appid=" +
+      apik
+  )
+    .then((res) => res.json())
+
+    .then((data) => {
+      const nameval = data["name"];
+      const descripVal = data["weather"]["0"]["description"];
+      const tempature = data["main"]["temp"];
+      const wndspd = data["wind"]["speed"];
+
+      city.innerHTML = `Weather of <span>${nameval}<span>`;
+      temp.innerHTML = `Temperature: <span>${convertion(tempature)} C</span>`;
+      description.innerHTML = `Sky Conditions: <span>${descripVal}<span>`;
+      wind.innerHTML = `Wind Speed: <span>${wndspd} km/h<span>`;
+    })
+
+    .catch((err) => alert("You entered Wrong city name"));
 });
-
-app.listen(3001, function (req, res) {
-  console.log("server is running on the port 3000");
-});
-
-// const express = require("express");
-// const https = require("https");
-// const app = express();
-
-// app.get("/", function (req, res) {
-//   const url =
-//     "https://api.openweathermap.org/data/2.5/weather?q=manila&units=metric&appid=92da537421fd2f5f8dba1214b315c2ad";
-//   https.get(url, function (response) {
-//     console.log(response);
-//   });
-//   res.send("Weather App V1.0 Server is up and running");
-// });
-
-// app.listen(3000, function (req, res) {
-//   console.log("server is running on the port 3000");
-// });
